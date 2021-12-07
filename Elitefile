@@ -1,0 +1,29 @@
+required_version is 0.1
+
+set bin_path as      "/usr/bin/"
+set output   as      "{bin_path}gu"
+
+set sudo     as      "sudo"
+set compiler as      "c++"
+set standard as std  "c++17"
+
+set src      as      "src/"
+set sources  as      "{src}gu.cpp"
+set flag     as link "curl"
+
+for signal "start" [
+    for exists "{bin_path}clang++" [
+        set compiler as "clang++"
+    ]
+
+    for argument "install" [
+        use exec "git submodule update --init --recursive"
+        use exec "{sudo} {compiler} {standard} {sources} -o {output} {flag}"
+
+        for exists "{output}" [
+            println "Installed to {output}"
+        ]
+    ]
+
+    use signal "exit"
+]
